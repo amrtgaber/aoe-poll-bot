@@ -24,6 +24,8 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 // Store for in-progress games. In production, you'd want to use a DB
 const activeGames = {};
 
+const activeIntervals = [];
+
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
  */
@@ -47,13 +49,32 @@ app.post('/interactions', async function (req, res) {
 
     // "test" guild command
     if (name === 'test') {
-      // Send a message into the channel where command was triggered from
+      const intervalId = setInterval(() => {
+        // Send a message into the channel where command was triggered from
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            // Fetches a random emoji to send from a helper function
+            content: 'hello world ' + getRandomEmoji(),
+          },
+        });
+      }, 3000);
+      activeIntervals.push(intervalId);
+    }
+    
+    // "test" guild command
+    if (name === 'test-stop') {
+      const numIntervals = activeIntervals.length;
+      
+      activeIntervals.forEach(id => clearInterval(id));
+      
+      activeIntervals = [];
+      
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          // Fetches a random emoji to send from a helper function
-          content: 'hello world ' + getRandomEmoji(),
-        },
+          content: `All intervals cleared: there were ${numIntervals} intervals`,
+        }
       });
     }
   }
