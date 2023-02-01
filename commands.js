@@ -61,7 +61,14 @@ function createCommandChoices() {
 // Simple test command
 export const TEST_COMMAND = {
   name: 'test',
-  description: 'Basic guild command',
+  description: 'test this bot',
+  type: 1,
+};
+
+// Simple test command
+export const TEST_STOP_COMMAND = {
+  name: 'test-stop',
+  description: 'stop testing',
   type: 1,
 };
 

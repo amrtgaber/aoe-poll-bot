@@ -11,6 +11,7 @@ import { getShuffledOptions, getResult } from './game.js';
 import {
   CHALLENGE_COMMAND,
   TEST_COMMAND,
+  TEST_STOP_COMMAND,
   HasGuildCommands,
 } from './commands.js';
 
@@ -24,7 +25,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 // Store for in-progress games. In production, you'd want to use a DB
 const activeGames = {};
 
-const activeIntervals = [];
+let activeIntervals = [];
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -60,12 +61,18 @@ app.post('/interactions', async function (req, res) {
         });
       }, 3000);
       activeIntervals.push(intervalId);
+      
+      return res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          // Fetches a random emoji to send from a helper function
+          content: `testing interval #${activeIntervals.length} registered`,
+        },
+      })
     }
     
     // "test" guild command
-    if (name === 'test-stop') {
-      const numIntervals = activeIntervals.length;
-      
+    if (name === 'test-stop') {     
       activeIntervals.forEach(id => clearInterval(id));
       
       activeIntervals = [];
@@ -73,7 +80,7 @@ app.post('/interactions', async function (req, res) {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: `All intervals cleared: there were ${numIntervals} intervals`,
+          content: `All intervals cleared: there were ${activeIntervals.length} intervals`,
         }
       });
     }
@@ -86,6 +93,7 @@ app.listen(PORT, () => {
   // Check if guild commands from commands.json are installed (if not, install them)
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
     TEST_COMMAND,
+    TEST_STOP_COMMAND,
     CHALLENGE_COMMAND,
   ]);
 });
