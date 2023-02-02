@@ -1,6 +1,11 @@
 import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
 
+export const CHANNEL_IDS = {
+  'bot': '339669015234478080',
+  'aoe-chat': '744707026302533652',
+};
+
 export function VerifyDiscordRequest(clientKey) {
   return function (req, res, buf, encoding) {
     const signature = req.get('X-Signature-Ed25519');

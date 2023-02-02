@@ -6,7 +6,7 @@ import {
   MessageComponentTypes,
   ButtonStyleTypes,
 } from 'discord-interactions';
-import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, SendMessage } from './utils.js';
+import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, SendMessage, CHANNEL_IDS } from './utils.js';
 import { getShuffledOptions, getResult } from './game.js';
 import {
   CHALLENGE_COMMAND,
@@ -68,7 +68,10 @@ app.listen(PORT, () => {
     CHALLENGE_COMMAND,
   ]);
   
-  const endpoint = `/channels/744707026302533652/messages`;
-  const options = { method: 'POST', body: {`yo yo`}};
-  SendMessage(endpoint, options);
+  // const endpoint = `/channels/744707026302533652/messages`;
+  const endpoint = `/channels/${CHANNEL_IDS.bot}/messages`;
+  // const endpoint = `/channels/339669015234478080/messages`;
+  const options = { method: 'POST', body: { content: 'testing repeat messages'}};
+  // setInterval(() => SendMessage(endpoint, options), 2000);
+  // SendMessage(endpoint, options);
 });
