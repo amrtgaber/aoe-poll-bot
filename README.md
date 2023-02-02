@@ -1,3 +1,7 @@
+# Link to glitch server
+
+https://glitch.com/edit/#!/silken-picturesque-snowshoe?path=app.js%3A18%3A24
+
 # Getting Started app for Discord
 
 This project contains a basic rock-paper-scissors-style Discord app written in JavaScript, built for the [getting started guide](https://discord.com/developers/docs/getting-started).
@@ -7,6 +11,7 @@ This project contains a basic rock-paper-scissors-style Discord app written in J
 > ✨ A version of this code is also hosted **[on Glitch 🎏](https://glitch.com/~getting-started-discord)** and **[on Replit 🌀](https://replit.com/@shaydewael/discord-example-app)**
 
 ## Project structure
+
 Below is a basic overview of the project structure:
 
 ```
@@ -28,22 +33,27 @@ Below is a basic overview of the project structure:
 ## Running app locally
 
 Before you start, you'll need to [create a Discord app](https://discord.com/developers/applications) with the proper permissions:
+
 - `applications.commands`
 - `bot` (with Send Messages enabled)
 
 Configuring the app is covered in detail in the [getting started guide](https://discord.com/developers/docs/getting-started).
+
 ### Setup project
 
 First clone the project:
+
 ```
 git clone https://github.com/discord/discord-example-app.git
 ```
 
 Then navigate to its directory and install dependencies:
+
 ```
 cd discord-example-app
 npm install
 ```
+
 ### Get app credentials
 
 Fetch the credentials from your app's settings and add them to a `.env` file (see `.env.sample` for an example). You'll need your app ID (`APP_ID`), server ID (`GUILD_ID`), bot token (`DISCORD_TOKEN`), and public key (`PUBLIC_KEY`).
@@ -92,6 +102,7 @@ On the **General Information** tab, there will be an **Interactions Endpoint URL
 Click **Save Changes**, and your app should be ready to run 🚀
 
 ## Other resources
+
 - Read **[the documentation](https://discord.com/developers/docs/intro)** for in-depth information about API features.
 - Browse the `examples/` folder in this project for smaller, feature-specific code examples
 - Join the **[Discord Developers server](https://discord.gg/discord-developers)** to ask questions about the API, attend events hosted by the Discord API team, and interact with other devs.
