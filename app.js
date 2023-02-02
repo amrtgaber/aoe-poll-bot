@@ -6,12 +6,11 @@ import {
   MessageComponentTypes,
   ButtonStyleTypes,
 } from 'discord-interactions';
-import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest } from './utils.js';
+import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, SendMessage } from './utils.js';
 import { getShuffledOptions, getResult } from './game.js';
 import {
   CHALLENGE_COMMAND,
   TEST_COMMAND,
-  TEST_STOP_COMMAND,
   HasGuildCommands,
 } from './commands.js';
 
@@ -24,8 +23,6 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 // Store for in-progress games. In production, you'd want to use a DB
 const activeGames = {};
-
-let activeIntervals = [];
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -50,38 +47,13 @@ app.post('/interactions', async function (req, res) {
 
     // "test" guild command
     if (name === 'test') {
-      const intervalId = setInterval(() => {
-        // Send a message into the channel where command was triggered from
-        return res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            // Fetches a random emoji to send from a helper function
-            content: 'hello world ' + getRandomEmoji(),
-          },
-        });
-      }, 3000);
-      activeIntervals.push(intervalId);
-      
+      // Send a message into the channel where command was triggered from
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           // Fetches a random emoji to send from a helper function
-          content: `testing interval #${activeIntervals.length} registered`,
+          content: 'hello world ' + getRandomEmoji(),
         },
-      })
-    }
-    
-    // "test" guild command
-    if (name === 'test-stop') {     
-      activeIntervals.forEach(id => clearInterval(id));
-      
-      activeIntervals = [];
-      
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          content: `All intervals cleared: there were ${activeIntervals.length} intervals`,
-        }
       });
     }
   }
@@ -93,7 +65,10 @@ app.listen(PORT, () => {
   // Check if guild commands from commands.json are installed (if not, install them)
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
     TEST_COMMAND,
-    TEST_STOP_COMMAND,
     CHALLENGE_COMMAND,
   ]);
+  
+  const endpoint = `/channels/744707026302533652/messages`;
+  const options = { method: 'POST', body: {`yo yo`}};
+  SendMessage(endpoint, options);
 });

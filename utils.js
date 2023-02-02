@@ -38,6 +38,14 @@ export async function DiscordRequest(endpoint, options) {
   return res;
 }
 
+export async function SendMessage(endpoint, options) {
+  try {
+    await DiscordRequest(endpoint, options);  
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 // Simple method that returns a random emoji from list
 export function getRandomEmoji() {
   const emojiList = ['😭','😄','😌','🤓','😎','😤','🤖','😶‍🌫️','🌏','📸','💿','👋','🌊','✨'];

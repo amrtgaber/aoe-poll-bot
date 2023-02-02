@@ -65,13 +65,6 @@ export const TEST_COMMAND = {
   type: 1,
 };
 
-// Simple test command
-export const TEST_STOP_COMMAND = {
-  name: 'test-stop',
-  description: 'stop testing',
-  type: 1,
-};
-
 // Command containing options
 export const CHALLENGE_COMMAND = {
   name: 'challenge',
