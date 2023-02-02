@@ -1,27 +1,14 @@
 import express from "express";
-import {
-  InteractionType,
-  InteractionResponseType,
-  InteractionResponseFlags,
-  MessageComponentTypes,
-  ButtonStyleTypes,
-} from "discord-interactions";
+import { InteractionType, InteractionResponseType } from "discord-interactions";
 import {
   VerifyDiscordRequest,
-  getRandomEmoji,
   DiscordRequest,
   SendMessage,
   AddReaction,
-  DeleteOldCommands,
+  PollOnce,
   CHANNEL_IDS,
 } from "./utils.js";
-import { getShuffledOptions, getResult } from "./game.js";
-import {
-  TEST_COMMAND,
-  START_COMMAND,
-  STOP_COMMAND,
-  HasGuildCommands,
-} from "./commands.js";
+import { START_COMMAND, STOP_COMMAND, HasGuildCommands } from "./commands.js";
 
 // Create an express app
 const app = express();
@@ -31,8 +18,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 let intervalId;
-const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
-const msInAnHour = 60 * 60 * 1000; // 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
+const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minute * 1000 miliseconds in a second
 const channelId = CHANNEL_IDS.bot;
 const body = { content: "who's down for aoe today?" };
 
@@ -57,40 +43,22 @@ app.post("/interactions", async function (req, res) {
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
 
-    // "test" guild command
-    if (name === "test") {
-      // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          // Fetches a random emoji to send from a helper function
-          content: "hello world " + getRandomEmoji(),
-        },
-      });
-    }
-
     if (name === "start-poll") {
       if (intervalId) {
         return res.send({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            // Fetches a random emoji to send from a helper function
             content: `poll has already started`,
           },
         });
       }
-      
-      intervalId = setInterval(async () => {
-        const messageRes = await SendMessage(channelId, body);
-        const message = await messageRes.json();
-        await AddReaction(channelId, message.id, '👍');
-      }, 2000);
 
-      // Send a message into the channel where command was triggered from
+      PollOnce(channelId, body);
+      intervalId = setInterval(() => PollOnce(channelId, body), msInADay);
+
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          // Fetches a random emoji to send from a helper function
           content: `polling started`,
         },
       });
@@ -100,11 +68,9 @@ app.post("/interactions", async function (req, res) {
       clearInterval(intervalId);
       intervalId = undefined;
 
-      // Send a message into the channel where command was triggered from
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          // Fetches a random emoji to send from a helper function
           content: `polling stopped`,
         },
       });
@@ -117,11 +83,9 @@ app.listen(PORT, () => {
 
   // Check if guild commands from commands.json are installed (if not, install them)
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
-    TEST_COMMAND,
     START_COMMAND,
     STOP_COMMAND,
   ]);
-  
-  
-  DeleteOldCommands();
+
+  // DeleteOldCommands();
 });

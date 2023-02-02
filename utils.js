@@ -66,36 +66,24 @@ export async function AddReaction(channel, message, emoji) {
   }
 }
 
-export async function DeleteOldCommands() {
-  // applications/<my_application_id>/commands/<command_id>
-  const applicationId = process.env.APP_ID;
-  const guildId = process.env.GUILD_ID;
-  
-  // const getCommandsRes = await DiscordRequest(`/applications/${applicationId}/commands`, { method: 'GET'});
-  // const commands = await getCommandsRes.json();
-  // console.log(commands);
-  
-  const endpoint = `applications/${applicationId}/guilds/${guildId}/commands`;
-  const commandsRes = await DiscordRequest(endpoint, { method: 'GET' });
-  const commands = await commandsRes.json();
-  console.log(commands);
-  
-  commands.forEach(command => {
-    const endpoint = `applications/${appId}/guilds/${guildId}/commands/${command.id}`;  
-    await DiscordRequest(endpoint, { method: 'DELETE' });
-  })
+export async function PollOnce(channelId, body) {
+  const messageRes = await SendMessage(channelId, body);
+  const message = await messageRes.json();
+  await AddReaction(channelId, message.id, '👍');
 }
 
-function DeleteCommand(endpoint) {
-  await DiscordRequest(endpoint, { method: 'DELETE' });
-}
-
-// Simple method that returns a random emoji from list
-export function getRandomEmoji() {
-  const emojiList = ['😭','😄','😌','🤓','😎','😤','🤖','😶‍🌫️','🌏','📸','💿','👋','🌊','✨'];
-  return emojiList[Math.floor(Math.random() * emojiList.length)];
-}
-
-export function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
+// export async function DeleteOldCommands() {
+//   // applications/<my_application_id>/commands/<command_id>
+//   const appId = process.env.APP_ID;
+//   const guildId = process.env.GUILD_ID;
+  
+//   const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
+//   const commandsRes = await DiscordRequest(endpoint, { method: 'GET' });
+//   const commands = await commandsRes.json();
+//   console.log(commands);
+  
+//   commands.forEach(async (command) => {
+//     const endpoint = `applications/${appId}/guilds/${guildId}/commands/${command.id}`;  
+//     await DiscordRequest(endpoint, { method: 'DELETE' });
+//   });
+// }
