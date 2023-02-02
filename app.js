@@ -12,6 +12,7 @@ import {
   DiscordRequest,
   SendMessage,
   AddReaction,
+  DeleteOldCommands,
   CHANNEL_IDS,
 } from "./utils.js";
 import { getShuffledOptions, getResult } from "./game.js";
@@ -69,14 +70,21 @@ app.post("/interactions", async function (req, res) {
     }
 
     if (name === "start-poll") {
-      /**
-      // intervalId = setInterval(() => {
-          SendMessage(channelId, body)
-        }, 2000);
-      */
-      // const rawRes = await SendMessage(channelId, body);
-      // const messageRes = await rawRes.json();
-      // await AddReaction(channelId, messageRes.id, '👍');
+      if (intervalId) {
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            // Fetches a random emoji to send from a helper function
+            content: `poll has already started`,
+          },
+        });
+      }
+      
+      intervalId = setInterval(async () => {
+        const rawRes = await SendMessage(channelId, body);
+        const messageRes = await rawRes.json();
+        await AddReaction(channelId, messageRes.id, '👍');
+      }, 2000);
 
       // Send a message into the channel where command was triggered from
       return res.send({
@@ -88,7 +96,7 @@ app.post("/interactions", async function (req, res) {
       });
     }
 
-    if (name === "stop") {
+    if (name === "stop-poll") {
       clearInterval(intervalId);
       intervalId = undefined;
 
@@ -113,4 +121,7 @@ app.listen(PORT, () => {
     START_COMMAND,
     STOP_COMMAND,
   ]);
+  
+  
+  DeleteOldCommands();
 });

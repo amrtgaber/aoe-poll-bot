@@ -3,7 +3,7 @@ import { verifyKey } from 'discord-interactions';
 
 export const CHANNEL_IDS = {
   'bot': '339669015234478080',
-  'aoe-chat': '744707026302533652',
+  'aoechat': '744707026302533652',
 };
 
 export function VerifyDiscordRequest(clientKey) {
@@ -59,11 +59,19 @@ export async function AddReaction(channel, message, emoji) {
   const endpoint = `/channels/${channel}/messages/${message}/reactions/${emoji}/@me`;
   
   try {
-    const res = await DiscordRequest(endpoint, {});
+    const res = await DiscordRequest(endpoint, { method: 'PUT' });
     return res;
   } catch (err) {
     console.error(err);
   }
+}
+
+export async function DeleteOldCommands() {
+  // applications/<my_application_id>/commands/<command_id>
+  const applicationId = process.env.APP_ID;
+  const getCommandsRes = await DiscordRequest(`/applications/${applicationId}/commands`, { method: 'GET'});
+  const commands = await getCommandsRes.json();
+  console.log(commands);
 }
 
 // Simple method that returns a random emoji from list
