@@ -69,7 +69,7 @@ export async function AddReaction(channel, message, emoji) {
 export async function PollOnce(channelId, body) {
   const messageRes = await SendMessage(channelId, body);
   const message = await messageRes.json();
-  await AddReaction(channelId, message.id, '👍');
+  // await AddReaction(channelId, message.id, '👍');
 }
 
 // export async function DeleteOldCommands() {
