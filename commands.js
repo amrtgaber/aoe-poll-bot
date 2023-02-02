@@ -49,7 +49,7 @@ export const START_COMMAND = {
 };
 
 export const STOP_COMMAND = {
-  name: 'stop-poll',
+  name: 'stop-polling',
   description: 'stop polling',
   type: 1,
 };

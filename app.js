@@ -24,7 +24,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 let intervalId;
 const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minute * 1000 miliseconds in a second
-const channelId = CHANNEL_IDS.bot;
+const channelId = CHANNEL_IDS.aoechat;
 const body = { content: "who's down for aoe today?" };
 
 /**
@@ -69,7 +69,7 @@ app.post("/interactions", async function (req, res) {
       });
     }
 
-    if (name === "stop-poll") {
+    if (name === "stop-polling") {
       clearInterval(intervalId);
       intervalId = undefined;
 
@@ -86,7 +86,7 @@ app.post("/interactions", async function (req, res) {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: "",
+          content: "polling once",
         },
       });
     }
