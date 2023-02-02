@@ -66,7 +66,7 @@ export const TEST_COMMAND = {
 };
 
 export const START_COMMAND = {
-  name: 'start',
+  name: 'start-poll',
   description: 'start polling',
   type: 1,
 };
