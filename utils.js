@@ -59,7 +59,7 @@ export async function AddReaction(channel, message, emoji) {
   const endpoint = `/channels/${channel}/messages/${message}/reactions/${emoji}/@me`;
   
   try {
-    const res = await DiscordRequest(endpoint);
+    const res = await DiscordRequest(endpoint, {});
     return res;
   } catch (err) {
     console.error(err);
