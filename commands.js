@@ -65,6 +65,18 @@ export const TEST_COMMAND = {
   type: 1,
 };
 
+export const START_COMMAND = {
+  name: 'start',
+  description: 'start polling',
+  type: 1,
+};
+
+export const STOP_COMMAND = {
+  name: 'stop',
+  description: 'stop polling',
+  type: 1,
+};
+
 // Command containing options
 export const CHALLENGE_COMMAND = {
   name: 'challenge',

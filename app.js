@@ -9,8 +9,9 @@ import {
 import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, SendMessage, CHANNEL_IDS } from './utils.js';
 import { getShuffledOptions, getResult } from './game.js';
 import {
-  CHALLENGE_COMMAND,
   TEST_COMMAND,
+  START_COMMAND,
+  STOP_COMMAND,
   HasGuildCommands,
 } from './commands.js';
 
@@ -21,8 +22,11 @@ const PORT = process.env.PORT || 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
-// Store for in-progress games. In production, you'd want to use a DB
-const activeGames = {};
+let intervalId;
+const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
+const msInAnHour = 60 * 60 * 1000; // 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
+const channelId = CHANNEL_IDS.bot;
+const body = { content: 'testing emoji reactions'};
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -57,6 +61,35 @@ app.post('/interactions', async function (req, res) {
       });
     }
   }
+
+  if (name === 'start') {
+    intervalId = setInterval(() => SendMessage(channelId, body), 2000);
+    const res = SendMessage(channelId, body);
+    console.log(res.content);
+
+    // Send a message into the channel where command was triggered from
+    return res.send({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        // Fetches a random emoji to send from a helper function
+        content: `polling started`,
+      },
+    });
+  }
+
+  if (name === 'stop') {
+    clearInterval(intervalId);
+    intervalId = undefined;
+
+    // Send a message into the channel where command was triggered from
+    return res.send({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        // Fetches a random emoji to send from a helper function
+        content: `polling stopped`,
+      },
+    });
+  }
 });
 
 app.listen(PORT, () => {
@@ -65,14 +98,7 @@ app.listen(PORT, () => {
   // Check if guild commands from commands.json are installed (if not, install them)
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
     TEST_COMMAND,
-    CHALLENGE_COMMAND,
+    START_COMMAND,
+    STOP_COMMAND,
   ]);
-  
-  const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
-  const msInAnHour = 60 * 60 * 1000; // 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
-  const channelId = CHANNEL_IDS.bot;
-  const body = { content: 'testing emoji reactions'};
-  // setInterval(() => SendMessage(channelId, body), 2000);
-  // const res = SendMessage(channelId, body);
-  // console.log(res);
 });
