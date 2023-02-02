@@ -70,7 +70,7 @@ app.post("/interactions", async function (req, res) {
     if (name === "start-poll") {
       // intervalId = setInterval(() => SendMessage(channelId, body), 2000);
       const messageRes = await SendMessage(channelId, body);
-      console.log(messageRes.body);
+      console.log(messageRes.id);
 
       // Send a message into the channel where command was triggered from
       return res.send({
