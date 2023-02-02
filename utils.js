@@ -69,9 +69,25 @@ export async function AddReaction(channel, message, emoji) {
 export async function DeleteOldCommands() {
   // applications/<my_application_id>/commands/<command_id>
   const applicationId = process.env.APP_ID;
-  const getCommandsRes = await DiscordRequest(`/applications/${applicationId}/commands`, { method: 'GET'});
-  const commands = await getCommandsRes.json();
+  const guildId = process.env.GUILD_ID;
+  
+  // const getCommandsRes = await DiscordRequest(`/applications/${applicationId}/commands`, { method: 'GET'});
+  // const commands = await getCommandsRes.json();
+  // console.log(commands);
+  
+  const endpoint = `applications/${applicationId}/guilds/${guildId}/commands`;
+  const commandsRes = await DiscordRequest(endpoint, { method: 'GET' });
+  const commands = await commandsRes.json();
   console.log(commands);
+  
+  commands.forEach(command => {
+    const endpoint = `applications/${appId}/guilds/${guildId}/commands/${command.id}`;  
+    await DiscordRequest(endpoint, { method: 'DELETE' });
+  })
+}
+
+function DeleteCommand(endpoint) {
+  await DiscordRequest(endpoint, { method: 'DELETE' });
 }
 
 // Simple method that returns a random emoji from list

@@ -33,7 +33,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 let intervalId;
 const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
 const msInAnHour = 60 * 60 * 1000; // 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
-const channelId = CHANNEL_IDS.aoechat;
+const channelId = CHANNEL_IDS.bot;
 const body = { content: "who's down for aoe today?" };
 
 /**
@@ -81,9 +81,9 @@ app.post("/interactions", async function (req, res) {
       }
       
       intervalId = setInterval(async () => {
-        const rawRes = await SendMessage(channelId, body);
-        const messageRes = await rawRes.json();
-        await AddReaction(channelId, messageRes.id, '👍');
+        const messageRes = await SendMessage(channelId, body);
+        const message = await messageRes.json();
+        await AddReaction(channelId, message.id, '👍');
       }, 2000);
 
       // Send a message into the channel where command was triggered from

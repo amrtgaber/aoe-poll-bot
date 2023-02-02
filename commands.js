@@ -58,13 +58,6 @@ function createCommandChoices() {
   return commandChoices;
 }
 
-// Simple test command
-export const TEST_COMMAND = {
-  name: 'test',
-  description: 'test this bot',
-  type: 1,
-};
-
 export const START_COMMAND = {
   name: 'start-poll',
   description: 'start polling',
@@ -72,23 +65,7 @@ export const START_COMMAND = {
 };
 
 export const STOP_COMMAND = {
-  name: 'stop',
+  name: 'stop-poll',
   description: 'stop polling',
-  type: 1,
-};
-
-// Command containing options
-export const CHALLENGE_COMMAND = {
-  name: 'challenge',
-  description: 'Challenge to a match of rock paper scissors',
-  options: [
-    {
-      type: 3,
-      name: 'object',
-      description: 'Pick your object',
-      required: true,
-      choices: createCommandChoices(),
-    },
-  ],
   type: 1,
 };
