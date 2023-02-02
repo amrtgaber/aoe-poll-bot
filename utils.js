@@ -43,9 +43,24 @@ export async function DiscordRequest(endpoint, options) {
   return res;
 }
 
-export async function SendMessage(endpoint, options) {
+export async function SendMessage(channel, body) {
+  const endpoint = `/channels/${channel}/messages`;
+  const options = { method: 'POST', body: body};
+  
   try {
-    await DiscordRequest(endpoint, options);  
+    const res = await DiscordRequest(endpoint, options);
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function AddReaction(channel, message, emoji) {
+  const endpoint = `/channels/${channel}/messages/${message}/reactions/${emoji}/@me`;
+  
+  try {
+    const res = await DiscordRequest(endpoint);
+    return res;
   } catch (err) {
     console.error(err);
   }

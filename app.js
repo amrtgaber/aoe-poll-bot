@@ -68,10 +68,11 @@ app.listen(PORT, () => {
     CHALLENGE_COMMAND,
   ]);
   
-  // const endpoint = `/channels/744707026302533652/messages`;
-  const endpoint = `/channels/${CHANNEL_IDS.bot}/messages`;
-  // const endpoint = `/channels/339669015234478080/messages`;
-  const options = { method: 'POST', body: { content: 'testing repeat messages'}};
-  // setInterval(() => SendMessage(endpoint, options), 2000);
-  // SendMessage(endpoint, options);
+  const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
+  const msInAnHour = 60 * 60 * 1000; // 60 minutes in an hour * 60 seconds in a minutes * 1000 miliseconds in a second
+  const channelId = CHANNEL_IDS.bot;
+  const body = { content: 'testing emoji reactions'};
+  // setInterval(() => SendMessage(channelId, body), 2000);
+  // const res = SendMessage(channelId, body);
+  // console.log(res);
 });
