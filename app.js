@@ -25,7 +25,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 let intervalId;
 const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minute * 1000 miliseconds in a second
 const channelId = CHANNEL_IDS.aoechat;
-const body = { content: "who's down for aoe today?" };
+const body = { content: "<@&747023101379870771> who's down for aoe today?" };
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
