@@ -11,6 +11,7 @@ import {
   getRandomEmoji,
   DiscordRequest,
   SendMessage,
+  AddReaction,
   CHANNEL_IDS,
 } from "./utils.js";
 import { getShuffledOptions, getResult } from "./game.js";
@@ -68,9 +69,15 @@ app.post("/interactions", async function (req, res) {
     }
 
     if (name === "start-poll") {
-      // intervalId = setInterval(() => SendMessage(channelId, body), 2000);
-      const messageRes = await SendMessage(channelId, body);
-      console.log(messageRes.id);
+      /**
+      // intervalId = setInterval(() => {
+          SendMessage(channelId, body)
+        }, 2000);
+      */
+      const rawRes = await SendMessage(channelId, body);
+      const messageRes = await rawRes.json();
+      await AddReaction(channelId, messageRes.id, 'thumbsup:U+1F44D')
+      // console.log(messageRes);
 
       // Send a message into the channel where command was triggered from
       return res.send({
