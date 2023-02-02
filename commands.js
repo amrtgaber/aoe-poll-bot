@@ -53,3 +53,9 @@ export const STOP_COMMAND = {
   description: 'stop polling',
   type: 1,
 };
+
+export const POLL_ONCE_COMMAND = {
+  name: 'poll-once',
+  description: 'polls once',
+  type: 1,
+};

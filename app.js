@@ -8,7 +8,12 @@ import {
   PollOnce,
   CHANNEL_IDS,
 } from "./utils.js";
-import { START_COMMAND, STOP_COMMAND, HasGuildCommands } from "./commands.js";
+import {
+  START_COMMAND,
+  STOP_COMMAND,
+  POLL_ONCE_COMMAND,
+  HasGuildCommands,
+} from "./commands.js";
 
 // Create an express app
 const app = express();
@@ -19,7 +24,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 let intervalId;
 const msInADay = 24 * 60 * 60 * 1000; // 24 hrs in a day * 60 minutes in an hour * 60 seconds in a minute * 1000 miliseconds in a second
-const channelId = CHANNEL_IDS.aoechat;
+const channelId = CHANNEL_IDS.bot;
 const body = { content: "who's down for aoe today?" };
 
 /**
@@ -75,6 +80,16 @@ app.post("/interactions", async function (req, res) {
         },
       });
     }
+
+    if (name === "poll-once") {
+      PollOnce(channelId, body);
+      return res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "",
+        },
+      });
+    }
   }
 });
 
@@ -85,5 +100,6 @@ app.listen(PORT, () => {
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
     START_COMMAND,
     STOP_COMMAND,
+    POLL_ONCE_COMMAND,
   ]);
 });
